@@ -4,11 +4,14 @@ import knightImage from '../../assets/unicorn.png';
 
 interface KnightProps {
   fontSize: number;
+  x: number;
+  y: number;
 }
 
-export default function Knight({ fontSize }: KnightProps) {
+export default function Knight({ fontSize, x, y }: KnightProps) {
   const [{ isDragging }, drag, preview] = useDrag(() => ({
     type: ItemTypes.KNIGHT,
+    item: { x, y },
     collect: (monitor: DragSourceMonitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
