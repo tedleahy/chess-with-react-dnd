@@ -1,3 +1,5 @@
+import Board from './components/Board';
+
 export default function App() {
-    return <h1>Hello world</h1>
+  return <Board boardSize={800} knightPosition={[0, 0]} />;
 }
