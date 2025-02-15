@@ -8,6 +8,8 @@ export function validMove(from: number[], to: number[], piece: string) {
       return validRookMove(from, to);
     case 'queen':
       return validQueenMove(from, to);
+    case 'king':
+      return validKingMove(from, to);
     default:
       return false;
   }
@@ -45,4 +47,12 @@ function validQueenMove(from: number[], to: number[]) {
   // A queen is effectively a combination of a rook and a bishop - it can move
   // horizontally, vertically, or diagonally.
   return validRookMove(from, to) || validBishopMove(from, to);
+}
+
+function validKingMove([fromX, fromY]: number[], [toX, toY]: number[]) {
+  const dx = Math.abs(toX - fromX);
+  const dy = Math.abs(toY - fromY);
+
+  // A king can move in any direction, but only one square at a time.
+  return (dx > 0 || dy > 0) && (dx <= 1 && dy <= 1);
 }
