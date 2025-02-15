@@ -1,4 +1,5 @@
 import knightImage from '../assets/drag-preview-images/knight.png';
+import bishopImage from '../assets/drag-preview-images/bishop.png';
 
 export const ItemTypes = {
   PIECE: 'piece',
@@ -14,4 +15,5 @@ export const PIECE_CHARS: Record<string, string> = {
 
 export const DRAG_PREVIEW_IMAGES: Record<string, string> = {
   knight: knightImage,
+  bishop: bishopImage,
 };
