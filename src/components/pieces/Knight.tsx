@@ -1,14 +1,13 @@
 import { useDrag, DragSourceMonitor, DragPreviewImage } from 'react-dnd';
-import { ItemTypes } from '../../constants';
+import { ItemTypes, PIECE_SIZE } from '../../constants';
 import knightImage from '../../assets/unicorn.png';
 
 interface KnightProps {
-  fontSize: number;
   x: number;
   y: number;
 }
 
-export default function Knight({ fontSize, x, y }: KnightProps) {
+export default function Knight({ x, y }: KnightProps) {
   const [{ isDragging }, drag, preview] = useDrag(() => ({
     type: ItemTypes.PIECE,
     item: { x, y, name: 'knight' },
@@ -23,7 +22,7 @@ export default function Knight({ fontSize, x, y }: KnightProps) {
       <div
         ref={drag as unknown as React.RefCallback<HTMLDivElement>}
         style={{
-          fontSize: fontSize,
+          fontSize: PIECE_SIZE,
           opacity: isDragging ? 0.4 : 1,
           fontWeight: isDragging ? 'bold' : 'normal',
           cursor: 'move',

@@ -4,9 +4,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import BoardSquare from './BoardSquare';
 import { useState } from 'react';
 import Bishop from './pieces/Bishop';
-
-const BOARD_SIZE = 800;
-const PIECE_SIZE = BOARD_SIZE / 10;
+import { BOARD_SIZE } from '../constants';
 
 // Map from coordinates to piece name
 export type PiecePositions = Record<string, string>;
@@ -52,9 +50,9 @@ function getPieceComponent(piecePositions: PiecePositions, x: number, y: number)
 
   switch (piece) {
     case 'knight':
-      return <Knight fontSize={PIECE_SIZE} x={x} y={y} />;
+      return <Knight x={x} y={y} />;
     case 'bishop':
-      return <Bishop fontSize={PIECE_SIZE} x={x} y={y} />;
+      return <Bishop x={x} y={y} />;
     default:
       return null;
   }
