@@ -12,6 +12,7 @@ export default function Board() {
   const [piecePositions, setPiecePositions] = useState<PiecePositions>({
     '0,0': 'knight',
     '0,1': 'bishop',
+    '0,2': 'rook',
   });
 
   const squares = Array.from({ length: 64 }).map((_, i) => {
