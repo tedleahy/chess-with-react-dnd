@@ -1,8 +1,8 @@
 import { PropsWithChildren } from 'react';
 import Square from './Square';
 import { DropTargetMonitor, useDrop } from 'react-dnd';
-import { ItemTypes } from '../constants';
-import { validMove } from '../utils';
+import { ItemTypes } from '../utils/constants';
+import { validMove } from '../utils/moveValidations';
 import Overlay from './Overlay';
 import { PiecePositions } from './Board';
 

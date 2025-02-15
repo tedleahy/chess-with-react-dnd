@@ -1,5 +1,5 @@
 import { useDrag, DragSourceMonitor, DragPreviewImage } from 'react-dnd';
-import { ItemTypes, PIECE_CHARS, PIECE_SIZE } from '../constants';
+import { ItemTypes, PIECE_CHARS, PIECE_SIZE } from '../utils/constants';
 import knightImage from '../assets/unicorn.png';
 
 interface PieceProps {
