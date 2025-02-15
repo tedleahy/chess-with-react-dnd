@@ -1,16 +1,17 @@
 import { useDrag, DragSourceMonitor, DragPreviewImage } from 'react-dnd';
-import { ItemTypes, PIECE_SIZE } from '../../constants';
-import knightImage from '../../assets/unicorn.png';
+import { ItemTypes, PIECE_CHARS, PIECE_SIZE } from '../constants';
+import knightImage from '../assets/unicorn.png';
 
-interface KnightProps {
+interface PieceProps {
   x: number;
   y: number;
+  name: string;
 }
 
-export default function Knight({ x, y }: KnightProps) {
+export default function Piece({ x, y, name }: PieceProps) {
   const [{ isDragging }, drag, preview] = useDrag(() => ({
     type: ItemTypes.PIECE,
-    item: { x, y, name: 'knight' },
+    item: { x, y, name },
     collect: (monitor: DragSourceMonitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
@@ -28,7 +29,7 @@ export default function Knight({ x, y }: KnightProps) {
           cursor: 'move',
         }}
       >
-        ♘
+        {PIECE_CHARS[name]}
       </div>
     </>
   );
