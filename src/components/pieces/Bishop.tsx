@@ -1,17 +1,16 @@
-import { useDrag, DragSourceMonitor, DragPreviewImage } from 'react-dnd';
+import { DragSourceMonitor, useDrag } from 'react-dnd';
 import { ItemTypes } from '../../constants';
-import knightImage from '../../assets/unicorn.png';
 
-interface KnightProps {
+interface BishopProps {
   fontSize: number;
   x: number;
   y: number;
 }
 
-export default function Knight({ fontSize, x, y }: KnightProps) {
-  const [{ isDragging }, drag, preview] = useDrag(() => ({
+export default function Bishop({ fontSize, x, y }: BishopProps) {
+  const [{ isDragging }, drag] = useDrag(() => ({
     type: ItemTypes.PIECE,
-    item: { x, y, name: 'knight' },
+    item: { x, y, name: 'bishop' },
     collect: (monitor: DragSourceMonitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
@@ -19,17 +18,16 @@ export default function Knight({ fontSize, x, y }: KnightProps) {
 
   return (
     <>
-      <DragPreviewImage connect={preview} src={knightImage} />
       <div
         ref={drag as unknown as React.RefCallback<HTMLDivElement>}
         style={{
-          fontSize: fontSize,
+          fontSize,
           opacity: isDragging ? 0.4 : 1,
           fontWeight: isDragging ? 'bold' : 'normal',
           cursor: 'move',
         }}
       >
-        ♘
+        ♗
       </div>
     </>
   );
