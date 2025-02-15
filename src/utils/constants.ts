@@ -3,6 +3,7 @@ import bishopImage from '../assets/drag-preview-images/bishop.png';
 import rookImage from '../assets/drag-preview-images/rook.png';
 import queenImage from '../assets/drag-preview-images/queen.png';
 import kingImage from '../assets/drag-preview-images/king.png';
+import pawnImage from '../assets/drag-preview-images/pawn.png';
 
 export const ItemTypes = {
   PIECE: 'piece',
@@ -17,6 +18,7 @@ export const PIECE_CHARS: Record<string, string> = {
   rook: '♖',
   queen: '♕',
   king: '♔',
+  pawn: '♙',
 };
 
 // Map from coordinates to piece name
@@ -33,6 +35,10 @@ export const initialPiecePositions: PiecePositions = {
   '7,0': 'rook',
 };
 
+for (let i = 0; i < 8; i++) {
+  initialPiecePositions[`${i},${1}`] = 'pawn';
+}
+
 
 export const DRAG_PREVIEW_IMAGES: Record<string, string> = {
   knight: knightImage,
@@ -40,4 +46,5 @@ export const DRAG_PREVIEW_IMAGES: Record<string, string> = {
   rook: rookImage,
   queen: queenImage,
   king: kingImage,
+  pawn: pawnImage,
 };

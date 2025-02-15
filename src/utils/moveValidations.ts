@@ -10,6 +10,8 @@ export function validMove(from: number[], to: number[], piece: string) {
       return validQueenMove(from, to);
     case 'king':
       return validKingMove(from, to);
+    case 'pawn':
+      return validPawnMove(from, to);
     default:
       return false;
   }
@@ -55,4 +57,14 @@ function validKingMove([fromX, fromY]: number[], [toX, toY]: number[]) {
 
   // A king can move in any direction, but only one square at a time.
   return (dx > 0 || dy > 0) && (dx <= 1 && dy <= 1);
+}
+
+function validPawnMove([fromX, fromY]: number[], [toX, toY]: number[]) {
+  const dx = toX - fromX;
+  const dy = toY - fromY;
+
+  // A pawn can move forward one square
+  // TODO implement capturing diagonally
+  // TODO implement moving two squares if it hasn't moved yet
+  return dx === 0 && dy === 1;
 }
