@@ -1,6 +1,5 @@
 import { useDrag, DragSourceMonitor, DragPreviewImage } from 'react-dnd';
-import { ItemTypes, PIECE_CHARS, PIECE_SIZE } from '../utils/constants';
-import knightImage from '../assets/unicorn.png';
+import { DRAG_PREVIEW_IMAGES, ItemTypes, PIECE_CHARS, PIECE_SIZE } from '../utils/constants';
 
 interface PieceProps {
   x: number;
@@ -9,6 +8,8 @@ interface PieceProps {
 }
 
 export default function Piece({ x, y, name }: PieceProps) {
+  const dragPreviewImg = DRAG_PREVIEW_IMAGES[name];
+
   const [{ isDragging }, drag, preview] = useDrag(() => ({
     type: ItemTypes.PIECE,
     item: { x, y, name },
@@ -19,7 +20,7 @@ export default function Piece({ x, y, name }: PieceProps) {
 
   return (
     <>
-      <DragPreviewImage connect={preview} src={knightImage} />
+      {dragPreviewImg && <DragPreviewImage connect={preview} src={dragPreviewImg} />}
       <div
         ref={drag as unknown as React.RefCallback<HTMLDivElement>}
         style={{
