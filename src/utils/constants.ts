@@ -22,8 +22,7 @@ export const PIECE_CHARS: Record<string, string> = {
 };
 
 export type PieceColor = 'white' | 'black';
-// Map from coordinates to piece name
-type Piece = {
+export type Piece = {
   name: string;
   color: PieceColor
 };

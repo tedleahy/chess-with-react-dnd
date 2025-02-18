@@ -24,12 +24,12 @@ export default function BoardSquare({
   const [{ isOver, canDrop }, drop] = useDrop(
     () => ({
       accept: ItemTypes.PIECE,
-      canDrop: (item: PieceDropItem) => validMove([item.x, item.y], [x, y], item.name),
+      canDrop: (item: PieceDropItem) => validMove([item.x, item.y], [x, y], item.name, item.color),
       drop: (item: PieceDropItem) => {
         setPiecePositions((prev: PiecePositions) => {
           const newPiecePositions = { ...prev };
           delete newPiecePositions[`${item.x},${item.y}`];
-          newPiecePositions[`${item.x},${item.y}`] = { name: item.name, color: item.color };
+          newPiecePositions[`${x},${y}`] = { name: item.name, color: item.color };
           return newPiecePositions;
         });
       },
