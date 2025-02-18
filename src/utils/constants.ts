@@ -21,10 +21,11 @@ export const PIECE_CHARS: Record<string, string> = {
   pawn: '♟',
 };
 
+export type PieceColor = 'white' | 'black';
 // Map from coordinates to piece name
 type Piece = {
   name: string;
-  color: 'white' | 'black'
+  color: PieceColor
 };
 export type PiecePositions = Record<string, Piece>;
 

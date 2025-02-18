@@ -1,11 +1,17 @@
 import { useDrag, DragSourceMonitor, DragPreviewImage } from 'react-dnd';
-import { DRAG_PREVIEW_IMAGES, ItemTypes, PIECE_CHARS, PIECE_SIZE } from '../utils/constants';
+import {
+  DRAG_PREVIEW_IMAGES,
+  ItemTypes,
+  PIECE_CHARS,
+  PIECE_SIZE,
+  PieceColor,
+} from '../utils/constants';
 
 interface PieceProps {
   x: number;
   y: number;
   name: string;
-  color: 'white' | 'black';
+  color: PieceColor;
 }
 
 export default function Piece({ x, y, name, color }: PieceProps) {
