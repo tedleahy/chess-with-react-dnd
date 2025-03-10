@@ -15,6 +15,19 @@ export const PIECE_CHARS: Record<string, string> = {
   rook: '♖',
 };
 
+// Map from coordinates to piece name
+export type PiecePositions = Record<string, string>;
+
+export const initialPiecePositions: PiecePositions = {
+  '0,0': 'rook',
+  '1,0': 'knight',
+  '2,0': 'bishop',
+  '5,0': 'bishop',
+  '6,0': 'knight',
+  '7,0': 'rook',
+};
+
+
 export const DRAG_PREVIEW_IMAGES: Record<string, string> = {
   knight: knightImage,
   bishop: bishopImage,

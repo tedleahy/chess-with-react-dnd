@@ -2,18 +2,11 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import BoardSquare from './BoardSquare';
 import { useState } from 'react';
-import { BOARD_SIZE } from '../utils/constants';
+import { BOARD_SIZE, PiecePositions, initialPiecePositions } from '../utils/constants';
 import Piece from './Piece';
 
-// Map from coordinates to piece name
-export type PiecePositions = Record<string, string>;
-
 export default function Board() {
-  const [piecePositions, setPiecePositions] = useState<PiecePositions>({
-    '0,0': 'knight',
-    '0,1': 'bishop',
-    '0,2': 'rook',
-  });
+  const [piecePositions, setPiecePositions] = useState<PiecePositions>(initialPiecePositions);
 
   const squares = Array.from({ length: 64 }).map((_, i) => {
     const x = i % 8;
