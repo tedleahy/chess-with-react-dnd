@@ -14,7 +14,12 @@ export default function Board() {
 
     return (
       <div key={`square-${i}`} style={{ width: '12.5%', height: '12.5%' }}>
-        <BoardSquare x={x} y={y} setPiecePositions={setPiecePositions}>
+        <BoardSquare
+          x={x}
+          y={y}
+          piecePositions={piecePositions}
+          setPiecePositions={setPiecePositions}
+        >
           {getPieceComponent(piecePositions, x, y)}
         </BoardSquare>
       </div>

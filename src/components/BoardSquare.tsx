@@ -8,14 +8,16 @@ import Overlay from './Overlay';
 interface BoardSquareProps {
   x: number;
   y: number;
+  piecePositions: PiecePositions;
   setPiecePositions: React.Dispatch<React.SetStateAction<PiecePositions>>;
 }
 
-type PieceDropItem = Piece & { x: number; y: number; name: string; color: PieceColor };
+export type PieceDropItem = Piece & { x: number; y: number };
 
 export default function BoardSquare({
   x,
   y,
+  piecePositions,
   setPiecePositions,
   children,
 }: PropsWithChildren<BoardSquareProps>) {
@@ -24,7 +26,7 @@ export default function BoardSquare({
   const [{ isOver, canDrop }, drop] = useDrop(
     () => ({
       accept: ItemTypes.PIECE,
-      canDrop: (item: PieceDropItem) => validMove([item.x, item.y], [x, y], item.name, item.color),
+      canDrop: (item: PieceDropItem) => validMove(item, [x, y], piecePositions),
       drop: (item: PieceDropItem) => {
         setPiecePositions((prev: PiecePositions) => {
           const newPiecePositions = { ...prev };
