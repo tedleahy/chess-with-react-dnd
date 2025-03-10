@@ -1,10 +1,9 @@
 import { DndProvider } from 'react-dnd';
-import Knight from './pieces/Knight';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import BoardSquare from './BoardSquare';
 import { useState } from 'react';
-import Bishop from './pieces/Bishop';
 import { BOARD_SIZE } from '../constants';
+import Piece from './Piece';
 
 // Map from coordinates to piece name
 export type PiecePositions = Record<string, string>;
@@ -47,13 +46,5 @@ export default function Board() {
 
 function getPieceComponent(piecePositions: PiecePositions, x: number, y: number) {
   const piece = piecePositions[`${x},${y}`];
-
-  switch (piece) {
-    case 'knight':
-      return <Knight x={x} y={y} />;
-    case 'bishop':
-      return <Bishop x={x} y={y} />;
-    default:
-      return null;
-  }
+  return piece ? <Piece x={x} y={y} name={piece} /> : null;
 }
