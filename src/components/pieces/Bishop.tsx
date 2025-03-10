@@ -1,13 +1,12 @@
 import { DragSourceMonitor, useDrag } from 'react-dnd';
-import { ItemTypes } from '../../constants';
+import { ItemTypes, PIECE_SIZE } from '../../constants';
 
 interface BishopProps {
-  fontSize: number;
   x: number;
   y: number;
 }
 
-export default function Bishop({ fontSize, x, y }: BishopProps) {
+export default function Bishop({ x, y }: BishopProps) {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: ItemTypes.PIECE,
     item: { x, y, name: 'bishop' },
@@ -21,7 +20,7 @@ export default function Bishop({ fontSize, x, y }: BishopProps) {
       <div
         ref={drag as unknown as React.RefCallback<HTMLDivElement>}
         style={{
-          fontSize,
+          fontSize: PIECE_SIZE,
           opacity: isDragging ? 0.4 : 1,
           fontWeight: isDragging ? 'bold' : 'normal',
           cursor: 'move',
