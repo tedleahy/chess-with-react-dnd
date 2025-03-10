@@ -6,6 +6,8 @@ export function validMove(from: number[], to: number[], piece: string) {
       return validBishopMove(from, to);
     case 'rook':
       return validRookMove(from, to);
+    case 'queen':
+      return validQueenMove(from, to);
     default:
       return false;
   }
@@ -15,7 +17,7 @@ function validKnightMove([fromX, fromY]: number[], [toX, toY]: number[]) {
   const dx = Math.abs(toX - fromX);
   const dy = Math.abs(toY - fromY);
 
-  // Knights must move by 2 in one axis and 1 in the other
+  // A knight moves in an L shape, so by 2 squares in one axis and 1 in the other.
   return (dx === 2 && dy === 1) || (dx === 1 && dy === 2);
 }
 
@@ -37,4 +39,10 @@ function validRookMove([fromX, fromY]: number[], [toX, toY]: number[]) {
   // That means one axis must stay the same. It must also move at least one square
   // along either axis.
   return (dx === 0 || dy === 0) && (dx > 0 || dy > 0);
+}
+
+function validQueenMove(from: number[], to: number[]) {
+  // A queen is effectively a combination of a rook and a bishop - it can move
+  // horizontally, vertically, or diagonally.
+  return validRookMove(from, to) || validBishopMove(from, to);
 }
