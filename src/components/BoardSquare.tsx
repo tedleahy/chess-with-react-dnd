@@ -2,7 +2,7 @@ import { PropsWithChildren } from 'react';
 import Square from './Square';
 import { DropTargetMonitor, useDrop } from 'react-dnd';
 import { ItemTypes } from '../constants';
-import { validKnightMove } from '../utils';
+import { validMove } from '../utils';
 import Overlay from './Overlay';
 import { PiecePositions } from './Board';
 
@@ -22,13 +22,14 @@ export default function BoardSquare({
 
   const [{ isOver, canDrop }, drop] = useDrop(
     () => ({
-      accept: ItemTypes.KNIGHT,
-      canDrop: (item: { x: number; y: number }) => validKnightMove(x, y, item.x, item.y),
-      drop: (item: { x: number; y: number }) => {
+      accept: ItemTypes.PIECE,
+      canDrop: (item: { x: number; y: number; name: string }) =>
+        validMove([item.x, item.y], [x, y], item.name),
+      drop: (item: { x: number; y: number; name: string }) => {
         setPiecePositions((prev: PiecePositions) => {
           const newPiecePositions = { ...prev };
           delete newPiecePositions[`${item.x},${item.y}`];
-          newPiecePositions[`${x},${y}`] = 'knight';
+          newPiecePositions[`${x},${y}`] = item.name;
           return newPiecePositions;
         });
       },
