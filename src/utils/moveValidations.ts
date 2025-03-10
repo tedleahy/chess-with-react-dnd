@@ -1,6 +1,9 @@
 import { PieceDropItem } from '../components/BoardSquare';
 import { PieceColor, PiecePositions } from './constants';
 
+// Lookup table that maps from a possible position to whether a move there is valid
+export type ValidMoves = Record<string, boolean>;
+
 export function validMove(
   { x, y, name, color }: PieceDropItem,
   [toX, toY]: number[],
@@ -26,6 +29,74 @@ export function validMove(
     default:
       return false;
   }
+}
+
+export function isValidMove(
+  [currentX, currentY]: number[],
+  [targetX, targetY]: number[],
+  piecePositions: PiecePositions,
+) {
+  const validMoves = piecePositions[`${currentX},${currentY}`]?.validMoves;
+  if (!validMoves) return false;
+
+  return validMoves[`${targetX},${targetY}`];
+}
+
+export function getValidMoves(
+  x: number,
+  y: number,
+  name: string,
+  color: PieceColor,
+  piecePositions: PiecePositions,
+): ValidMoves {
+  switch (name) {
+    case 'rook':
+      return validRookMoves(x, y, color, piecePositions);
+    default:
+      return {};
+  }
+}
+
+function validRookMoves(
+  x: number,
+  y: number,
+  color: PieceColor,
+  piecePositions: PiecePositions,
+): ValidMoves {
+  const directions = [
+    [-1, 0], // Left
+    [1, 0], // Right
+    [0, -1], // Up
+    [0, 1], // Down
+  ];
+
+  const validMoves: ValidMoves = {};
+
+  for (const [dx, dy] of directions) {
+    let currentX = x + dx;
+    let currentY = y + dy;
+
+    const withinBoardBounds = (x: number, y: number) => x >= 0 && x <= 7 && y >= 0 && y <= 7;
+
+    while (withinBoardBounds(currentX, currentY)) {
+      if (squareContainsSameColorPiece(currentX, currentY, color, piecePositions)) {
+        break;
+      }
+
+      validMoves[`${currentX},${currentY}`] = true;
+
+      // If we encounter an opponent's piece, we can capture it but can't go further
+      const pieceOnSquare = piecePositions[`${currentX},${currentY}`];
+      if (pieceOnSquare && pieceOnSquare.color !== color) {
+        break;
+      }
+
+      currentX += dx;
+      currentY += dy;
+    }
+  }
+
+  return validMoves;
 }
 
 function validKnightMove(
@@ -81,7 +152,6 @@ function validQueenMove(
   piecePositions: PiecePositions,
 ) {
   // A queen is effectively a combination of a rook and a bishop - it can move
-  // horizontally, vertically, or diagonally.
   // horizontally, vertically, or diagonally.
   return (
     validRookMove(from, to, color, piecePositions) ||
