@@ -2,7 +2,7 @@ import { PropsWithChildren } from 'react';
 import Square from './Square';
 import { DropTargetMonitor, useDrop } from 'react-dnd';
 import { ItemTypes, Piece, PiecePositions } from '../utils/constants';
-import { getValidMoves, isValidMove, validMove } from '../utils/moveValidations';
+import { isValidMove, setValidMovesInPiecePositions } from '../utils/moveValidations';
 import Overlay from './Overlay';
 
 interface BoardSquareProps {
@@ -26,14 +26,7 @@ export default function BoardSquare({
   const [{ isOver, canDrop }, drop] = useDrop(
     () => ({
       accept: ItemTypes.PIECE,
-      // canDrop: (item: PieceDropItem) => validMove(item, [x, y], piecePositions),
-      canDrop: (item: PieceDropItem) => {
-        if (item.name === 'rook') {
-          return isValidMove([item.x, item.y], [x, y], piecePositions);
-        } else {
-          return validMove(item, [x, y], piecePositions);
-        }
-      },
+      canDrop: (item: PieceDropItem) => isValidMove([item.x, item.y], [x, y], piecePositions),
       drop: (item: PieceDropItem) => {
         setPiecePositions((prev: PiecePositions) => {
           const newPiecePositions = { ...prev };
@@ -44,11 +37,7 @@ export default function BoardSquare({
             color: item.color,
           };
 
-          // Recalculate the valid moves each piece can make
-          for (const [position, piece] of Object.entries(newPiecePositions)) {
-            const [x, y] = position.split(',').map(Number);
-            piece.validMoves = getValidMoves(x, y, piece.name, piece.color, newPiecePositions);
-          }
+          setValidMovesInPiecePositions(newPiecePositions);
 
           return newPiecePositions;
         });
