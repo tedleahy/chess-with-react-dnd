@@ -22,13 +22,16 @@ export default function BoardSquare({
     piecePositions,
     setPiecePositions,
     children,
+    currentTurn,
+    setCurrentTurn,
 }: PropsWithChildren<BoardSquareProps>) {
     const color = (x + y) % 2 === 1 ? '#b58863' : '#f0d9b5';
 
     const [{ isOver, canDrop }, drop] = useDrop(
         () => ({
             accept: ItemTypes.PIECE,
-            canDrop: (item: PieceDropItem) => isValidMove([item.x, item.y], [x, y], piecePositions),
+            canDrop: (item: PieceDropItem) =>
+                currentTurn === item.color && isValidMove([item.x, item.y], [x, y], piecePositions),
             drop: (item: PieceDropItem) => {
                 setPiecePositions((prev: PiecePositions) => {
                     const newPiecePositions = { ...prev };
