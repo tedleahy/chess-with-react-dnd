@@ -5,14 +5,15 @@ interface PieceProps {
   x: number;
   y: number;
   name: string;
+  color: 'white' | 'black';
 }
 
-export default function Piece({ x, y, name }: PieceProps) {
+export default function Piece({ x, y, name, color }: PieceProps) {
   const dragPreviewImg = DRAG_PREVIEW_IMAGES[name];
 
   const [{ isDragging }, drag, preview] = useDrag(() => ({
     type: ItemTypes.PIECE,
-    item: { x, y, name },
+    item: { x, y, name, color },
     collect: (monitor: DragSourceMonitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
@@ -25,8 +26,9 @@ export default function Piece({ x, y, name }: PieceProps) {
         ref={drag as unknown as React.RefCallback<HTMLDivElement>}
         style={{
           fontSize: PIECE_SIZE,
+          color: color,
           opacity: isDragging ? 0.4 : 1,
-          fontWeight: isDragging ? 'bold' : 'normal',
+          fontWeight: 'bold',
           cursor: 'move',
         }}
       >
