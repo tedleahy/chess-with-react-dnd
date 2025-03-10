@@ -24,7 +24,7 @@ export const PIECE_CHARS: Record<string, string> = {
 export type PieceColor = 'white' | 'black';
 export type Piece = {
   name: string;
-  color: PieceColor
+  color: PieceColor;
 };
 export type PiecePositions = Record<string, Piece>;
 
@@ -52,7 +52,6 @@ for (let i = 0; i < 8; i++) {
   initialPiecePositions[`${i},1`] = { name: 'pawn', color: 'black' };
   initialPiecePositions[`${i},6`] = { name: 'pawn', color: 'white' };
 }
-
 
 export const DRAG_PREVIEW_IMAGES: Record<string, string> = {
   knight: knightImage,

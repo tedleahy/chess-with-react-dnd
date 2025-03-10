@@ -1,4 +1,4 @@
-import { PieceColor } from "./constants";
+import { PieceColor } from './constants';
 
 export function validMove(from: number[], to: number[], piece: string, color?: PieceColor) {
   switch (piece) {
@@ -59,7 +59,7 @@ function validKingMove([fromX, fromY]: number[], [toX, toY]: number[]) {
   const dy = Math.abs(toY - fromY);
 
   // A king can move in any direction, but only one square at a time.
-  return (dx > 0 || dy > 0) && (dx <= 1 && dy <= 1);
+  return (dx > 0 || dy > 0) && dx <= 1 && dy <= 1;
 }
 
 function validPawnMove([fromX, fromY]: number[], [toX, toY]: number[], color: PieceColor) {
