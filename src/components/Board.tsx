@@ -2,7 +2,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import BoardSquare from './BoardSquare';
 import { useState } from 'react';
-import { BOARD_SIZE } from '../constants';
+import { BOARD_SIZE } from '../utils/constants';
 import Piece from './Piece';
 
 // Map from coordinates to piece name
