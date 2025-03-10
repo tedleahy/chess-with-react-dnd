@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react';
 import Square from './Square';
 import { DropTargetMonitor, useDrop } from 'react-dnd';
-import { ItemTypes, Piece, PiecePositions } from '../utils/constants';
+import { ItemTypes, Piece, PieceColor, PiecePositions } from '../utils/constants';
 import { isValidMove, setValidMovesInPiecePositions } from '../utils/moveValidations';
 import Overlay from './Overlay';
 
@@ -10,6 +10,8 @@ interface BoardSquareProps {
     y: number;
     piecePositions: PiecePositions;
     setPiecePositions: React.Dispatch<React.SetStateAction<PiecePositions>>;
+    currentTurn: PieceColor;
+    setCurrentTurn: React.Dispatch<React.SetStateAction<PieceColor>>;
 }
 
 export type PieceDropItem = Piece & { x: number; y: number };
