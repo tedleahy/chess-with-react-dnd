@@ -111,15 +111,16 @@ function validPawnMove(
 ) {
   const dx = toX - fromX;
   const dy = toY - fromY;
+  const isFirstMove = color === 'black' ? fromY === 1 : fromY === 6;
 
   // A pawn can move forward one square
   // TODO implement capturing diagonally
-  // TODO implement moving two squares if it hasn't moved yet
   let squareIsValid;
+
   if (color === 'black') {
-    squareIsValid = dx === 0 && dy === 1;
+    squareIsValid = dx === 0 && (isFirstMove ? dy === 1 || dy === 2 : dy === 1);
   } else {
-    squareIsValid = dx === 0 && dy === -1;
+    squareIsValid = dx === 0 && (isFirstMove ? dy === -1 || dy === -2 : dy === -1);
   }
 
   return squareIsValid && !squareContainsSameColorPiece(toX, toY, color, piecePositions);
