@@ -1,8 +1,8 @@
 import { PropsWithChildren } from 'react';
 import Square from './Square';
 import { DropTargetMonitor, useDrop } from 'react-dnd';
-import { ItemTypes, Piece, PieceColor, PiecePositions } from '../utils/constants';
-import { validMove } from '../utils/moveValidations';
+import { ItemTypes, Piece, PiecePositions } from '../utils/constants';
+import { isValidMove, setValidMovesInPiecePositions } from '../utils/moveValidations';
 import Overlay from './Overlay';
 
 interface BoardSquareProps {
@@ -26,12 +26,19 @@ export default function BoardSquare({
   const [{ isOver, canDrop }, drop] = useDrop(
     () => ({
       accept: ItemTypes.PIECE,
-      canDrop: (item: PieceDropItem) => validMove(item, [x, y], piecePositions),
+      canDrop: (item: PieceDropItem) => isValidMove([item.x, item.y], [x, y], piecePositions),
       drop: (item: PieceDropItem) => {
         setPiecePositions((prev: PiecePositions) => {
           const newPiecePositions = { ...prev };
           delete newPiecePositions[`${item.x},${item.y}`];
-          newPiecePositions[`${x},${y}`] = { name: item.name, color: item.color };
+
+          newPiecePositions[`${x},${y}`] = {
+            name: item.name,
+            color: item.color,
+          };
+
+          setValidMovesInPiecePositions(newPiecePositions);
+
           return newPiecePositions;
         });
       },
@@ -40,7 +47,7 @@ export default function BoardSquare({
         canDrop: !!monitor.canDrop(),
       }),
     }),
-    [x, y],
+    [x, y, piecePositions],
   );
 
   return (
