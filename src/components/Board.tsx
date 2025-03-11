@@ -1,7 +1,7 @@
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import BoardSquare from './BoardSquare';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BOARD_SIZE, PieceColor, PiecePositions, initialPiecePositions } from '../utils/constants';
 import Piece from './Piece';
 
@@ -12,6 +12,21 @@ type BoardProps = {
 
 export default function Board({ currentTurn, setCurrentTurn }: BoardProps) {
     const [piecePositions, setPiecePositions] = useState<PiecePositions>(initialPiecePositions);
+    const [inCheck, setInCheck] = useState<PieceColor | null>(null);
+
+    useEffect(() => {
+        for (const [, piece] of Object.entries(piecePositions)) {
+            if (!piece.validMoves) continue;
+
+            for (const [targetPosition] of Object.entries(piece.validMoves)) {
+                const pieceOnSquare = piecePositions[targetPosition];
+                if (pieceOnSquare?.name === 'king') {
+                    setInCheck(pieceOnSquare.color);
+                    return;
+                }
+            }
+        }
+    }, [piecePositions]);
 
     const squares = Array.from({ length: 64 }).map((_, i) => {
         const x = i % 8;
