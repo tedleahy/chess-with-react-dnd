@@ -150,3 +150,47 @@ export function setValidMovesInPiecePositions(piecePositions: PiecePositions) {
         piece.validMoves = getValidMoves(x, y, piece.name, piece.color, piecePositions);
     }
 }
+
+// Check if a move would result in the player's king being in check
+export function moveWouldResultInCheck(
+    [currentX, currentY]: number[],
+    [targetX, targetY]: number[],
+    piecePositions: PiecePositions,
+    currentTurn: PieceColor,
+): boolean {
+    // Create a deep copy of the piece positions to simulate the move
+    const simulatedPositions: PiecePositions = JSON.parse(JSON.stringify(piecePositions));
+
+    // Get the piece that would be moved
+    const movingPiece = simulatedPositions[`${currentX},${currentY}`];
+    if (!movingPiece) return false;
+
+    // Remove the piece from its original position
+    delete simulatedPositions[`${currentX},${currentY}`];
+
+    // Add the piece to its new position
+    simulatedPositions[`${targetX},${targetY}`] = movingPiece;
+
+    // Recalculate valid moves for all pieces in the simulated new positions
+    setValidMovesInPiecePositions(simulatedPositions);
+
+    // Find the king of the current player
+    let kingPosition = '';
+    for (const [position, piece] of Object.entries(simulatedPositions)) {
+        if (piece.name === 'king' && piece.color === currentTurn) {
+            kingPosition = position;
+            break;
+        }
+    }
+
+    // Check if any opponent's piece can capture the king in the simulated position
+    for (const piece of Object.values(simulatedPositions)) {
+        if (piece.color !== currentTurn && piece.validMoves) {
+            if (piece.validMoves[kingPosition]) {
+                return true; // The move would result in check
+            }
+        }
+    }
+
+    return false; // The move is safe
+}
