@@ -2,7 +2,11 @@ import { PropsWithChildren } from 'react';
 import Square from './Square';
 import { DropTargetMonitor, useDrop } from 'react-dnd';
 import { ItemTypes, Piece, PieceColor, PiecePositions } from '../utils/constants';
-import { isValidMove, setValidMovesInPiecePositions } from '../utils/moveValidations';
+import {
+    isValidMove,
+    moveWouldResultInCheck,
+    setValidMovesInPiecePositions,
+} from '../utils/moveValidations';
 import Overlay from './Overlay';
 
 interface BoardSquareProps {
@@ -30,8 +34,22 @@ export default function BoardSquare({
     const [{ isOver, canDrop }, drop] = useDrop(
         () => ({
             accept: ItemTypes.PIECE,
-            canDrop: (item: PieceDropItem) =>
-                currentTurn === item.color && isValidMove([item.x, item.y], [x, y], piecePositions),
+            canDrop: (item: PieceDropItem) => {
+                const isValid =
+                    currentTurn === item.color &&
+                    isValidMove([item.x, item.y], [x, y], piecePositions);
+
+                // If the move is not valid, no need to check further
+                if (!isValid) return false;
+
+                // If it is valid, check if it would result in the player's king being in check
+                return !moveWouldResultInCheck(
+                    [item.x, item.y],
+                    [x, y],
+                    piecePositions,
+                    currentTurn,
+                );
+            },
             drop: (item: PieceDropItem) => {
                 setPiecePositions((prev: PiecePositions) => {
                     const newPiecePositions = { ...prev };
@@ -57,7 +75,7 @@ export default function BoardSquare({
                 canDrop: !!monitor.canDrop(),
             }),
         }),
-        [x, y, piecePositions],
+        [x, y, piecePositions, currentTurn],
     );
 
     return (
