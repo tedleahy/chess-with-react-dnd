@@ -57,11 +57,19 @@ export default function BoardSquare({
                     // Remove the piece from its original position
                     delete newPiecePositions[`${item.x},${item.y}`];
 
-                    // Add the piece to its new position
-                    newPiecePositions[`${x},${y}`] = {
-                        name: item.name,
-                        color: item.color,
-                    };
+                    // Handle pawn promotion
+                    if (item.name === 'pawn' && [0, 7].includes(y)) {
+                        newPiecePositions[`${x},${y}`] = {
+                            name: 'queen',
+                            color: item.color,
+                        };
+                    } else {
+                        // Add the piece to its new position
+                        newPiecePositions[`${x},${y}`] = {
+                            name: item.name,
+                            color: item.color,
+                        };
+                    }
 
                     setValidMovesInPiecePositions(newPiecePositions);
 
