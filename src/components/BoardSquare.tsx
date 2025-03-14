@@ -1,10 +1,9 @@
 import { PropsWithChildren } from 'react';
 import Square from './Square';
 import { DropTargetMonitor, useDrop } from 'react-dnd';
-import { ItemTypes } from '../utils/constants';
+import { ItemTypes, Piece, PiecePositions } from '../utils/constants';
 import { validMove } from '../utils/moveValidations';
 import Overlay from './Overlay';
-import { PiecePositions } from './Board';
 
 interface BoardSquareProps {
   x: number;
@@ -12,24 +11,25 @@ interface BoardSquareProps {
   setPiecePositions: React.Dispatch<React.SetStateAction<PiecePositions>>;
 }
 
+type PieceDropItem = Piece & { x: number; y: number; name: string; color: 'white' | 'black' };
+
 export default function BoardSquare({
   x,
   y,
   setPiecePositions,
   children,
 }: PropsWithChildren<BoardSquareProps>) {
-  const color = (x + y) % 2 === 1 ? 'black' : 'white';
+  const color = (x + y) % 2 === 1 ? '#b58863' : '#f0d9b5';
 
   const [{ isOver, canDrop }, drop] = useDrop(
     () => ({
       accept: ItemTypes.PIECE,
-      canDrop: (item: { x: number; y: number; name: string }) =>
-        validMove([item.x, item.y], [x, y], item.name),
-      drop: (item: { x: number; y: number; name: string }) => {
+      canDrop: (item: PieceDropItem) => validMove([item.x, item.y], [x, y], item.name),
+      drop: (item: PieceDropItem) => {
         setPiecePositions((prev: PiecePositions) => {
           const newPiecePositions = { ...prev };
           delete newPiecePositions[`${item.x},${item.y}`];
-          newPiecePositions[`${x},${y}`] = item.name;
+          newPiecePositions[`${item.x},${item.y}`] = { name: item.name, color: item.color };
           return newPiecePositions;
         });
       },
