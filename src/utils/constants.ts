@@ -4,6 +4,7 @@ import rookImage from '../assets/drag-preview-images/rook.png';
 import queenImage from '../assets/drag-preview-images/queen.png';
 import kingImage from '../assets/drag-preview-images/king.png';
 import pawnImage from '../assets/drag-preview-images/pawn.png';
+import { ValidMoves } from './moveValidations';
 
 export const ItemTypes = {
   PIECE: 'piece',
@@ -25,6 +26,7 @@ export type PieceColor = 'white' | 'black';
 export type Piece = {
   name: string;
   color: PieceColor;
+  validMoves?: ValidMoves;
 };
 export type PiecePositions = Record<string, Piece>;
 
