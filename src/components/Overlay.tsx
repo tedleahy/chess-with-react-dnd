@@ -14,6 +14,7 @@ export default function Overlay({ color }: OverlayProps) {
                 backgroundColor: color,
                 zIndex: 1,
                 opacity: 0.5,
+                pointerEvents: 'none',
             }}
         />
     );
