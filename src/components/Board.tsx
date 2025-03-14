@@ -40,11 +40,5 @@ export default function Board() {
 
 function getPieceComponent(piecePositions: PiecePositions, x: number, y: number) {
   const piece = piecePositions[`${x},${y}`];
-  return piece ? (
-    <Piece x={x} y={y} name={piece.name} color={piece.color} />
-  ) : (
-    <p>
-      {x},{y}
-    </p>
-  );
+  return piece ? <Piece x={x} y={y} name={piece.name} color={piece.color} /> : null;
 }
