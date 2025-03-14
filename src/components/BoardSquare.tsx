@@ -16,6 +16,8 @@ interface BoardSquareProps {
     setPiecePositions: React.Dispatch<React.SetStateAction<PiecePositions>>;
     currentTurn: PieceColor;
     setCurrentTurn: React.Dispatch<React.SetStateAction<PieceColor>>;
+    promotedPawnPosition: string;
+    setPromotedPawnPosition: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export type PieceDropItem = ChessPiece & { x: number; y: number };
@@ -25,9 +27,11 @@ export default function BoardSquare({
     y,
     piecePositions,
     setPiecePositions,
-    children,
     currentTurn,
     setCurrentTurn,
+    promotedPawnPosition,
+    setPromotedPawnPosition,
+    children,
 }: PropsWithChildren<BoardSquareProps>) {
     const color = (x + y) % 2 === 1 ? '#7a5d2b' : '#a37d53';
 
@@ -35,6 +39,8 @@ export default function BoardSquare({
         () => ({
             accept: ItemTypes.PIECE,
             canDrop: (item: PieceDropItem) => {
+                if (promotedPawnPosition) return false;
+
                 const isValid =
                     currentTurn === item.color &&
                     isValidMove([item.x, item.y], [x, y], piecePositions);
@@ -59,17 +65,14 @@ export default function BoardSquare({
 
                     // Handle pawn promotion
                     if (item.name === 'pawn' && [0, 7].includes(y)) {
-                        newPiecePositions[`${x},${y}`] = {
-                            name: 'queen',
-                            color: item.color,
-                        };
-                    } else {
-                        // Add the piece to its new position
-                        newPiecePositions[`${x},${y}`] = {
-                            name: item.name,
-                            color: item.color,
-                        };
+                        setPromotedPawnPosition(`${x},${y}`);
                     }
+
+                    // Add the piece to its new position
+                    newPiecePositions[`${x},${y}`] = {
+                        name: item.name,
+                        color: item.color,
+                    };
 
                     setValidMovesInPiecePositions(newPiecePositions);
 

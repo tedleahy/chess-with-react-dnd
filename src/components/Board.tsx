@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { BOARD_SIZE, PieceColor, PiecePositions, initialPiecePositions } from '../utils/constants';
 import Piece from './Piece';
 import Overlay from './Overlay';
+import PawnPromotionDialog from './PawnPromotionDialog';
 
 type BoardProps = {
     currentTurn: PieceColor;
@@ -14,6 +15,7 @@ type BoardProps = {
 export default function Board({ currentTurn, setCurrentTurn }: BoardProps) {
     const [piecePositions, setPiecePositions] = useState<PiecePositions>(initialPiecePositions);
     const [inCheck, setInCheck] = useState<PieceColor | null>(null);
+    const [promotedPawnPosition, setPromotedPawnPosition] = useState('');
 
     useEffect(() => {
         let kingInCheck = null;
@@ -51,6 +53,8 @@ export default function Board({ currentTurn, setCurrentTurn }: BoardProps) {
                     setPiecePositions={setPiecePositions}
                     currentTurn={currentTurn}
                     setCurrentTurn={setCurrentTurn}
+                    promotedPawnPosition={promotedPawnPosition}
+                    setPromotedPawnPosition={setPromotedPawnPosition}
                 >
                     {getPieceComponent(piecePositions, x, y)}
                     {piece?.name === 'king' && inCheck === piece?.color && <Overlay color="red" />}
@@ -70,6 +74,22 @@ export default function Board({ currentTurn, setCurrentTurn }: BoardProps) {
                     border: '1px solid black',
                 }}
             >
+                <PawnPromotionDialog
+                    visible={!!promotedPawnPosition}
+                    onSelectPromotionPiece={(pieceName) => {
+                        setPiecePositions((prev: PiecePositions) => {
+                            const newPiecePositions = { ...prev };
+
+                            newPiecePositions[promotedPawnPosition] = {
+                                name: pieceName,
+                                color: currentTurn == 'white' ? 'black' : 'white',
+                            };
+                            return newPiecePositions;
+                        });
+
+                        setPromotedPawnPosition('');
+                    }}
+                />
                 {squares}
             </div>
         </DndProvider>
