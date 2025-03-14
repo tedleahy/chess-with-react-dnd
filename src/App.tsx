@@ -6,12 +6,14 @@ export default function App() {
     const [currentTurn, setCurrentTurn] = useState<PieceColor>('white');
 
     return (
-        <div style={{ width: BOARD_SIZE }}>
-            <Board currentTurn={currentTurn} setCurrentTurn={setCurrentTurn} />
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '3rem' }}>
+            <div style={{ width: BOARD_SIZE }}>
+                <Board currentTurn={currentTurn} setCurrentTurn={setCurrentTurn} />
 
-            <p style={{ textAlign: 'center', color: 'white', fontFamily: 'sans-serif' }}>
-                Current turn: <b>{currentTurn}</b>
-            </p>
+                <p style={{ textAlign: 'center', color: 'white', fontFamily: 'sans-serif' }}>
+                    Current turn: <b>{currentTurn}</b>
+                </p>
+            </div>
         </div>
     );
 }
