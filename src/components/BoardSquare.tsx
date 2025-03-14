@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react';
 import Square from './Square';
 import { DropTargetMonitor, useDrop } from 'react-dnd';
-import { ItemTypes, Piece, PieceColor, PiecePositions } from '../utils/constants';
+import { ItemTypes, ChessPiece, PieceColor, PiecePositions } from '../utils/constants';
 import {
     isValidMove,
     moveWouldResultInCheck,
@@ -18,7 +18,7 @@ interface BoardSquareProps {
     setCurrentTurn: React.Dispatch<React.SetStateAction<PieceColor>>;
 }
 
-export type PieceDropItem = Piece & { x: number; y: number };
+export type PieceDropItem = ChessPiece & { x: number; y: number };
 
 export default function BoardSquare({
     x,

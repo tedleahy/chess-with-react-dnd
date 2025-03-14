@@ -23,12 +23,12 @@ export const PIECE_CHARS: Record<string, string> = {
 };
 
 export type PieceColor = 'white' | 'black';
-export type Piece = {
+export type ChessPiece = {
     name: string;
     color: PieceColor;
     validMoves?: ValidMoves;
 };
-export type PiecePositions = Record<string, Piece>;
+export type PiecePositions = Record<string, ChessPiece>;
 
 export const initialPiecePositions: PiecePositions = {
     '0,0': { name: 'rook', color: 'black' },
