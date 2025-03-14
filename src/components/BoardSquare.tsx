@@ -29,7 +29,7 @@ export default function BoardSquare({
     currentTurn,
     setCurrentTurn,
 }: PropsWithChildren<BoardSquareProps>) {
-    const color = (x + y) % 2 === 1 ? '#b58863' : '#f0d9b5';
+    const color = (x + y) % 2 === 1 ? '#7a5d2b' : '#a37d53';
 
     const [{ isOver, canDrop }, drop] = useDrop(
         () => ({
