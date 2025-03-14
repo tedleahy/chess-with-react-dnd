@@ -4,7 +4,7 @@ import rookImage from '../assets/drag-preview-images/rook.png';
 import queenImage from '../assets/drag-preview-images/queen.png';
 import kingImage from '../assets/drag-preview-images/king.png';
 import pawnImage from '../assets/drag-preview-images/pawn.png';
-import { ValidMoves } from './moveValidations';
+import { setValidMovesInPiecePositions, ValidMoves } from './moveValidations';
 
 export const ItemTypes = {
   PIECE: 'piece',
@@ -54,6 +54,8 @@ for (let i = 0; i < 8; i++) {
   initialPiecePositions[`${i},1`] = { name: 'pawn', color: 'black' };
   initialPiecePositions[`${i},6`] = { name: 'pawn', color: 'white' };
 }
+
+setValidMovesInPiecePositions(initialPiecePositions);
 
 export const DRAG_PREVIEW_IMAGES: Record<string, string> = {
   knight: knightImage,
