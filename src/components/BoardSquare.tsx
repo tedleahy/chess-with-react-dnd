@@ -30,8 +30,11 @@ export default function BoardSquare({
       drop: (item: PieceDropItem) => {
         setPiecePositions((prev: PiecePositions) => {
           const newPiecePositions = { ...prev };
+
+          // Remove the piece from its original position
           delete newPiecePositions[`${item.x},${item.y}`];
 
+          // Add the piece to its new position
           newPiecePositions[`${x},${y}`] = {
             name: item.name,
             color: item.color,

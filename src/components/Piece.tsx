@@ -17,13 +17,16 @@ interface PieceProps {
 export default function Piece({ x, y, name, color }: PieceProps) {
   const dragPreviewImg = DRAG_PREVIEW_IMAGES[name];
 
-  const [{ isDragging }, drag, preview] = useDrag(() => ({
-    type: ItemTypes.PIECE,
-    item: { x, y, name, color },
-    collect: (monitor: DragSourceMonitor) => ({
-      isDragging: !!monitor.isDragging(),
+  const [{ isDragging }, drag, preview] = useDrag(
+    () => ({
+      type: ItemTypes.PIECE,
+      item: { x, y, name, color },
+      collect: (monitor: DragSourceMonitor) => ({
+        isDragging: !!monitor.isDragging(),
+      }),
     }),
-  }));
+    [x, y, name, color],
+  );
 
   return (
     <>
