@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react';
 import Square from './Square';
 import { DropTargetMonitor, useDrop } from 'react-dnd';
-import { ItemTypes, Piece, PieceColor, PiecePositions } from '../utils/constants';
+import { ItemTypes, ChessPiece, PieceColor, PiecePositions } from '../utils/constants';
 import {
     isValidMove,
     moveWouldResultInCheck,
@@ -16,18 +16,22 @@ interface BoardSquareProps {
     setPiecePositions: React.Dispatch<React.SetStateAction<PiecePositions>>;
     currentTurn: PieceColor;
     setCurrentTurn: React.Dispatch<React.SetStateAction<PieceColor>>;
+    promotedPawnPosition: string;
+    setPromotedPawnPosition: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export type PieceDropItem = Piece & { x: number; y: number };
+export type PieceDropItem = ChessPiece & { x: number; y: number };
 
 export default function BoardSquare({
     x,
     y,
     piecePositions,
     setPiecePositions,
-    children,
     currentTurn,
     setCurrentTurn,
+    promotedPawnPosition,
+    setPromotedPawnPosition,
+    children,
 }: PropsWithChildren<BoardSquareProps>) {
     const color = (x + y) % 2 === 1 ? '#7a5d2b' : '#a37d53';
 
@@ -35,6 +39,8 @@ export default function BoardSquare({
         () => ({
             accept: ItemTypes.PIECE,
             canDrop: (item: PieceDropItem) => {
+                if (promotedPawnPosition) return false;
+
                 const isValid =
                     currentTurn === item.color &&
                     isValidMove([item.x, item.y], [x, y], piecePositions);
@@ -56,6 +62,11 @@ export default function BoardSquare({
 
                     // Remove the piece from its original position
                     delete newPiecePositions[`${item.x},${item.y}`];
+
+                    // Handle pawn promotion
+                    if (item.name === 'pawn' && [0, 7].includes(y)) {
+                        setPromotedPawnPosition(`${x},${y}`);
+                    }
 
                     // Add the piece to its new position
                     newPiecePositions[`${x},${y}`] = {
