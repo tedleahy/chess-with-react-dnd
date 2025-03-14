@@ -2,10 +2,15 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import BoardSquare from './BoardSquare';
 import { useState } from 'react';
-import { BOARD_SIZE, PiecePositions, initialPiecePositions } from '../utils/constants';
+import { BOARD_SIZE, PieceColor, PiecePositions, initialPiecePositions } from '../utils/constants';
 import Piece from './Piece';
 
-export default function Board() {
+type BoardProps = {
+    currentTurn: PieceColor;
+    setCurrentTurn: React.Dispatch<React.SetStateAction<PieceColor>>;
+};
+
+export default function Board({ currentTurn, setCurrentTurn }: BoardProps) {
     const [piecePositions, setPiecePositions] = useState<PiecePositions>(initialPiecePositions);
 
     const squares = Array.from({ length: 64 }).map((_, i) => {
@@ -19,6 +24,8 @@ export default function Board() {
                     y={y}
                     piecePositions={piecePositions}
                     setPiecePositions={setPiecePositions}
+                    currentTurn={currentTurn}
+                    setCurrentTurn={setCurrentTurn}
                 >
                     {getPieceComponent(piecePositions, x, y)}
                 </BoardSquare>
