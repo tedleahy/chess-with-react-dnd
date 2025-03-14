@@ -46,6 +46,8 @@ export default function BoardSquare({
 
                     return newPiecePositions;
                 });
+
+                setCurrentTurn((prev) => (prev === 'white' ? 'black' : 'white'));
             },
             collect: (monitor: DropTargetMonitor) => ({
                 isOver: !!monitor.isOver(),
