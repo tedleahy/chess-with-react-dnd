@@ -1,3 +1,14 @@
+export function validMove(from: number[], to: number[], piece: string) {
+  switch (piece) {
+    case 'knight':
+      return validKnightMove(from, to);
+    case 'bishop':
+      return validBishopMove(from, to);
+    default:
+      return false;
+  }
+}
+
 function validKnightMove([fromX, fromY]: number[], [toX, toY]: number[]) {
   const dx = Math.abs(toX - fromX);
   const dy = Math.abs(toY - fromY);
@@ -14,15 +25,4 @@ function validBishopMove([fromX, fromY]: number[], [toX, toY]: number[]) {
   // i.e. if it moves one square up/down, it must also move one square left/right.
   // It must also move at least one square.
   return dx === dy && dx > 0;
-}
-
-export function validMove(from: number[], to: number[], piece: string) {
-  switch (piece) {
-    case 'knight':
-      return validKnightMove(from, to);
-    case 'bishop':
-      return validBishopMove(from, to);
-    default:
-      return false;
-  }
 }
