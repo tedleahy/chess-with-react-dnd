@@ -6,6 +6,7 @@ import { BOARD_SIZE, PieceColor, PiecePositions, initialPiecePositions } from '.
 import Piece from './Piece';
 import Overlay from './Overlay';
 import PawnPromotionDialog from './PawnPromotionDialog';
+import { isCheckmate } from '../utils/moveValidations';
 
 type BoardProps = {
     currentPlayer: PieceColor;
@@ -15,9 +16,12 @@ type BoardProps = {
 export default function Board({ currentPlayer, setCurrentPlayer }: BoardProps) {
     const [piecePositions, setPiecePositions] = useState<PiecePositions>(initialPiecePositions);
     const [inCheck, setInCheck] = useState<PieceColor | null>(null);
+    const [checkmate, setCheckmate] = useState(false);
     const [promotedPawnPosition, setPromotedPawnPosition] = useState('');
 
     useEffect(() => {
+        setCheckmate(isCheckmate(piecePositions, currentPlayer));
+
         let kingInCheck = null;
 
         for (const [, piece] of Object.entries(piecePositions)) {
