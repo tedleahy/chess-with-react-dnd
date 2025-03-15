@@ -8,11 +8,11 @@ import Overlay from './Overlay';
 import PawnPromotionDialog from './PawnPromotionDialog';
 
 type BoardProps = {
-    currentTurn: PieceColor;
-    setCurrentTurn: React.Dispatch<React.SetStateAction<PieceColor>>;
+    currentPlayer: PieceColor;
+    setCurrentPlayer: React.Dispatch<React.SetStateAction<PieceColor>>;
 };
 
-export default function Board({ currentTurn, setCurrentTurn }: BoardProps) {
+export default function Board({ currentPlayer, setCurrentPlayer }: BoardProps) {
     const [piecePositions, setPiecePositions] = useState<PiecePositions>(initialPiecePositions);
     const [inCheck, setInCheck] = useState<PieceColor | null>(null);
     const [promotedPawnPosition, setPromotedPawnPosition] = useState('');
@@ -51,8 +51,8 @@ export default function Board({ currentTurn, setCurrentTurn }: BoardProps) {
                     y={y}
                     piecePositions={piecePositions}
                     setPiecePositions={setPiecePositions}
-                    currentTurn={currentTurn}
-                    setCurrentTurn={setCurrentTurn}
+                    currentPlayer={currentPlayer}
+                    setCurrentPlayer={setCurrentPlayer}
                     promotedPawnPosition={promotedPawnPosition}
                     setPromotedPawnPosition={setPromotedPawnPosition}
                 >
@@ -82,7 +82,7 @@ export default function Board({ currentTurn, setCurrentTurn }: BoardProps) {
 
                             newPiecePositions[promotedPawnPosition] = {
                                 name: pieceName,
-                                color: currentTurn == 'white' ? 'black' : 'white',
+                                color: currentPlayer == 'white' ? 'black' : 'white',
                             };
                             return newPiecePositions;
                         });

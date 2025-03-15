@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { BOARD_SIZE, PieceColor } from './utils/constants';
 
 export default function App() {
-    const [currentTurn, setCurrentTurn] = useState<PieceColor>('white');
+    const [currentPlayer, setCurrentPlayer] = useState<PieceColor>('white');
 
     return (
         <div
@@ -15,10 +15,10 @@ export default function App() {
             }}
         >
             <div style={{ width: BOARD_SIZE }}>
-                <Board currentTurn={currentTurn} setCurrentTurn={setCurrentTurn} />
+                <Board currentPlayer={currentPlayer} setCurrentPlayer={setCurrentPlayer} />
 
                 <p style={{ textAlign: 'center', color: 'white' }}>
-                    Current turn: <b>{currentTurn}</b>
+                    Current turn: <b>{currentPlayer}</b>
                 </p>
             </div>
         </div>

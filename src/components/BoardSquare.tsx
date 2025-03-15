@@ -14,8 +14,8 @@ interface BoardSquareProps {
     y: number;
     piecePositions: PiecePositions;
     setPiecePositions: React.Dispatch<React.SetStateAction<PiecePositions>>;
-    currentTurn: PieceColor;
-    setCurrentTurn: React.Dispatch<React.SetStateAction<PieceColor>>;
+    currentPlayer: PieceColor;
+    setCurrentPlayer: React.Dispatch<React.SetStateAction<PieceColor>>;
     promotedPawnPosition: string;
     setPromotedPawnPosition: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -27,8 +27,8 @@ export default function BoardSquare({
     y,
     piecePositions,
     setPiecePositions,
-    currentTurn,
-    setCurrentTurn,
+    currentPlayer,
+    setCurrentPlayer,
     promotedPawnPosition,
     setPromotedPawnPosition,
     children,
@@ -42,7 +42,7 @@ export default function BoardSquare({
                 if (promotedPawnPosition) return false;
 
                 const isValid =
-                    currentTurn === item.color &&
+                    currentPlayer === item.color &&
                     isValidMove([item.x, item.y], [x, y], piecePositions);
 
                 // If the move is not valid, no need to check further
@@ -53,7 +53,7 @@ export default function BoardSquare({
                     [item.x, item.y],
                     [x, y],
                     piecePositions,
-                    currentTurn,
+                    currentPlayer,
                 );
             },
             drop: (item: PieceDropItem) => {
@@ -79,14 +79,14 @@ export default function BoardSquare({
                     return newPiecePositions;
                 });
 
-                setCurrentTurn((prev) => (prev === 'white' ? 'black' : 'white'));
+                setCurrentPlayer((prev) => (prev === 'white' ? 'black' : 'white'));
             },
             collect: (monitor: DropTargetMonitor) => ({
                 isOver: !!monitor.isOver(),
                 canDrop: !!monitor.canDrop(),
             }),
         }),
-        [x, y, piecePositions, currentTurn],
+        [x, y, piecePositions, currentPlayer],
     );
 
     return (
