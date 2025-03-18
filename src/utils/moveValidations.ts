@@ -1,4 +1,4 @@
-import { PieceColor, PiecePositions } from './constants';
+import { ChessPiece, PieceColor, PiecePositions } from './constants';
 
 // Lookup table that maps from a possible position to whether a move there is valid
 export type ValidMoves = Record<string, boolean>;
@@ -193,4 +193,157 @@ export function moveWouldResultInCheck(
     }
 
     return false; // The move is safe
+}
+
+export function isCheckmate(piecePositions: PiecePositions, currentPlayer: PieceColor): boolean {
+    // Find the king's position
+    let kingPosition = '';
+    for (const [position, piece] of Object.entries(piecePositions)) {
+        if (piece.name === 'king' && piece.color === currentPlayer) {
+            kingPosition = position;
+            break;
+        }
+    }
+
+    // Get any pieces attacking the king
+    const attackingPieces: Array<[string, ChessPiece]> = [];
+    for (const [position, piece] of Object.entries(piecePositions)) {
+        if (piece.color !== currentPlayer && piece.validMoves?.[kingPosition]) {
+            attackingPieces.push([position, piece]);
+        }
+    }
+
+    // If there are no attacking pieces, it's not even check, let alone checkmate
+    if (attackingPieces.length === 0) return false;
+
+    const king = piecePositions[kingPosition];
+
+    if (attackingPieces.length > 1) {
+        // If the king can't move, and there's more than one attacking piece, it's
+        // checkmate - it's impossible to block or capture multiple attacking pieces at once
+        if (attackingPieces.length > 1 && !king.validMoves) return true;
+
+        // If the king can move out of check, then it's not checkmate
+        if (kingCanMoveOutOfCheck(kingPosition, king, piecePositions, currentPlayer)) {
+            return false;
+        }
+    }
+
+    // If there's only a single attacking piece, a player has three escape options:
+    //  1. Move the king to a safe square
+    //  2. Capture the attacking piece
+    //  3. Block the attack
+    // If they can't do any of these things, it's checkmate
+
+    // Check if any piece can capture the attacker
+    const [attackerPosition, attacker] = attackingPieces[0];
+
+    for (const piece of Object.values(piecePositions)) {
+        if (piece.color !== currentPlayer) continue; // skip opponent's pieces
+
+        // If this piece can capture the attacking piece, it's not checkmate
+        if (piece.validMoves?.[attackerPosition]) {
+            return false;
+        }
+    }
+
+    // Check if the attacking piece can be blocked
+    if (['bishop', 'rook', 'queen'].includes(attacker.name)) {
+        const blockingSquares = getSquaresBetween(attackerPosition, kingPosition);
+
+        // Check if any piece can move to a blocking square
+        for (const [position, piece] of Object.entries(piecePositions)) {
+            if (piece.color !== currentPlayer) continue; // skip opponent's pieces
+            if (piece.name === 'king') continue; // king can't block itself
+
+            const [pieceX, pieceY] = position.split(',').map(Number);
+
+            for (const blockingSquare of blockingSquares) {
+                if (piece.validMoves?.[blockingSquare]) {
+                    const [blockX, blockY] = blockingSquare.split(',').map(Number);
+
+                    const moveWouldEndCheck = !moveWouldResultInCheck(
+                        [pieceX, pieceY],
+                        [blockX, blockY],
+                        piecePositions,
+                        currentPlayer,
+                    );
+
+                    // The attack can be blocked, so it's not checkmate
+                    if (moveWouldEndCheck) return false;
+                }
+            }
+        }
+    }
+
+    // If we've checked all the possible defenses and none work, it's checkmate
+    return true;
+}
+
+function kingCanMoveOutOfCheck(
+    kingPosition: string,
+    king: ChessPiece,
+    piecePositions: PiecePositions,
+    currentPlayer: PieceColor,
+) {
+    for (const movePosition of Object.keys(king.validMoves || {})) {
+        const [kingX, kingY] = kingPosition.split(',').map(Number);
+        const [moveX, moveY] = movePosition.split(',').map(Number);
+        const validMoveOutOfCheck = !moveWouldResultInCheck(
+            [kingX, kingY],
+            [moveX, moveY],
+            piecePositions,
+            currentPlayer,
+        );
+
+        if (validMoveOutOfCheck) return true;
+    }
+
+    return false;
+}
+
+// Gets the positions of all squares between two positions.
+// Figures out the direction based on where each piece is in relation to each other.
+// Returns an empty array if there is no way for a piece to get from one position to the other.
+function getSquaresBetween(startPosition: string, endPosition: string): string[] {
+    const [startX, startY] = startPosition.split(',').map(Number);
+    const [endX, endY] = endPosition.split(',').map(Number);
+
+    const squares: string[] = [];
+
+    // Horizontal
+    if (startY === endY) {
+        const start = Math.min(startX, endX) + 1;
+        const end = Math.max(startX, endX);
+        for (let x = start; x < end; x++) {
+            squares.push(`${x},${startY}`);
+        }
+    }
+    // Vertical
+    else if (startX === endX) {
+        const start = Math.min(startY, endY) + 1;
+        const end = Math.max(startY, endY);
+        for (let y = start; y < end; y++) {
+            squares.push(`${startX},${y}`);
+        }
+    }
+    // Diagonal - if the number of squares moved horizontally is the same as
+    // the number of squares moved vertically
+    else if (Math.abs(endX - startX) === Math.abs(endY - startY)) {
+        // Figure out if going up or down the board
+        const xStep = endX > startX ? 1 : -1;
+        const yStep = endY > startY ? 1 : -1;
+
+        let x = startX + xStep;
+        let y = startY + yStep;
+
+        // Until the target square is reached:
+        while (x !== endX && y !== endY) {
+            squares.push(`${x},${y}`);
+            x += xStep;
+            y += yStep;
+        }
+    }
+
+    return squares;
 }

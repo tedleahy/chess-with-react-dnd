@@ -6,6 +6,8 @@ import { BOARD_SIZE, PieceColor, PiecePositions, initialPiecePositions } from '.
 import Piece from './Piece';
 import Overlay from './Overlay';
 import PawnPromotionDialog from './PawnPromotionDialog';
+import { isCheckmate, setValidMovesInPiecePositions } from '../utils/moveValidations';
+import CheckmateDialog from './CheckmateDialog';
 
 type BoardProps = {
     currentPlayer: PieceColor;
@@ -15,9 +17,12 @@ type BoardProps = {
 export default function Board({ currentPlayer, setCurrentPlayer }: BoardProps) {
     const [piecePositions, setPiecePositions] = useState<PiecePositions>(initialPiecePositions);
     const [inCheck, setInCheck] = useState<PieceColor | null>(null);
+    const [checkmate, setCheckmate] = useState(false);
     const [promotedPawnPosition, setPromotedPawnPosition] = useState('');
 
     useEffect(() => {
+        setCheckmate(isCheckmate(piecePositions, currentPlayer));
+
         let kingInCheck = null;
 
         for (const [, piece] of Object.entries(piecePositions)) {
@@ -37,7 +42,7 @@ export default function Board({ currentPlayer, setCurrentPlayer }: BoardProps) {
         }
 
         setInCheck(kingInCheck);
-    }, [piecePositions]);
+    }, [piecePositions, currentPlayer]);
 
     const squares = Array.from({ length: 64 }).map((_, i) => {
         const x = i % 8;
@@ -75,7 +80,7 @@ export default function Board({ currentPlayer, setCurrentPlayer }: BoardProps) {
                 }}
             >
                 <PawnPromotionDialog
-                    visible={!!promotedPawnPosition}
+                    open={!!promotedPawnPosition}
                     onSelectPromotionPiece={(pieceName) => {
                         setPiecePositions((prev: PiecePositions) => {
                             const newPiecePositions = { ...prev };
@@ -88,6 +93,18 @@ export default function Board({ currentPlayer, setCurrentPlayer }: BoardProps) {
                         });
 
                         setPromotedPawnPosition('');
+                    }}
+                />
+                <CheckmateDialog
+                    open={checkmate}
+                    currentPlayer={currentPlayer}
+                    onAccept={() => {
+                        // Reset the game state
+                        setCheckmate(false);
+                        setInCheck(null);
+                        setCurrentPlayer('white');
+                        setValidMovesInPiecePositions(initialPiecePositions);
+                        setPiecePositions(initialPiecePositions);
                     }}
                 />
                 {squares}
