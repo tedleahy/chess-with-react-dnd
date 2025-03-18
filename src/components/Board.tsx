@@ -6,7 +6,8 @@ import { BOARD_SIZE, PieceColor, PiecePositions, initialPiecePositions } from '.
 import Piece from './Piece';
 import Overlay from './Overlay';
 import PawnPromotionDialog from './PawnPromotionDialog';
-import { isCheckmate } from '../utils/moveValidations';
+import { isCheckmate, setValidMovesInPiecePositions } from '../utils/moveValidations';
+import CheckmateDialog from './CheckmateDialog';
 
 type BoardProps = {
     currentPlayer: PieceColor;
@@ -41,7 +42,7 @@ export default function Board({ currentPlayer, setCurrentPlayer }: BoardProps) {
         }
 
         setInCheck(kingInCheck);
-    }, [piecePositions]);
+    }, [piecePositions, currentPlayer]);
 
     const squares = Array.from({ length: 64 }).map((_, i) => {
         const x = i % 8;
@@ -92,6 +93,18 @@ export default function Board({ currentPlayer, setCurrentPlayer }: BoardProps) {
                         });
 
                         setPromotedPawnPosition('');
+                    }}
+                />
+                <CheckmateDialog
+                    open={checkmate}
+                    currentPlayer={currentPlayer}
+                    onAccept={() => {
+                        // Reset the game state
+                        setCheckmate(false);
+                        setInCheck(null);
+                        setCurrentPlayer('white');
+                        setValidMovesInPiecePositions(initialPiecePositions);
+                        setPiecePositions(initialPiecePositions);
                     }}
                 />
                 {squares}
