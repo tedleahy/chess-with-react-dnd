@@ -79,7 +79,7 @@ export default function Board({ currentPlayer, setCurrentPlayer }: BoardProps) {
                 }}
             >
                 <PawnPromotionDialog
-                    visible={!!promotedPawnPosition}
+                    open={!!promotedPawnPosition}
                     onSelectPromotionPiece={(pieceName) => {
                         setPiecePositions((prev: PiecePositions) => {
                             const newPiecePositions = { ...prev };
