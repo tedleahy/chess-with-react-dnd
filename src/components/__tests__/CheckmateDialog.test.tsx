@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import CheckmateDialog from '../CheckmateDialog';
 import { PIECE_CHARS, PieceColor } from '../../utils/constants';
+import { assertAccessible } from '../../test-utils/accessibility';
 
 describe('CheckmateDialog Component', () => {
     function setup(open: boolean, currentPlayer: PieceColor = 'white', onAccept = () => {}) {
@@ -38,13 +39,17 @@ describe('CheckmateDialog Component', () => {
         });
     });
 
-    describe('Clicking the Play Again button', () => {
-        test('calls onAccept once', () => {
-            const mockOnAccept = jest.fn();
-            setup(true, 'black', mockOnAccept);
+    test('Clicking the Play Again button calls the onAccept function', () => {
+        const mockOnAccept = jest.fn();
+        setup(true, 'black', mockOnAccept);
 
-            fireEvent.click(screen.getByRole('button', { name: 'Play again' }));
-            expect(mockOnAccept).toHaveBeenCalledTimes(1);
-        });
+        fireEvent.click(screen.getByRole('button', { name: 'Play again' }));
+        expect(mockOnAccept).toHaveBeenCalledTimes(1);
+    });
+
+    test('Should have no accessibility violations', async () => {
+        assertAccessible(
+            <CheckmateDialog open={true} currentPlayer={'black'} onAccept={() => {}} />,
+        );
     });
 });

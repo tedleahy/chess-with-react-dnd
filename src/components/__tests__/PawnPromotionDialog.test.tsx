@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import PawnPromotionDialog from '../PawnPromotionDialog';
 import { PIECE_CHARS } from '../../utils/constants';
+import { assertAccessible } from '../../test-utils/accessibility';
 
 describe('PawnPromotionDialog Component', () => {
     test('Is visible when the open prop is true', () => {
@@ -50,5 +51,9 @@ describe('PawnPromotionDialog Component', () => {
                 expect(mockOnSelect).toHaveBeenCalledWith(piece);
             });
         }
+    });
+
+    test('Should have no accessibility violations', async () => {
+        assertAccessible(<PawnPromotionDialog open={true} onSelectPromotionPiece={() => {}} />);
     });
 });

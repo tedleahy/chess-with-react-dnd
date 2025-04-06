@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import Square from '../Square';
+import { assertAccessible } from '../../test-utils/accessibility';
 
 describe('Square Component', () => {
     for (const color of ['white', 'black']) {
@@ -20,5 +21,9 @@ describe('Square Component', () => {
 
         expect(screen.getByTestId('child')).toBeInTheDocument();
         expect(screen.getByText('Child content')).toBeInTheDocument();
+    });
+
+    test('Should have no accessibility violations', async () => {
+        assertAccessible(<Square color={'white'}>Test</Square>);
     });
 });
