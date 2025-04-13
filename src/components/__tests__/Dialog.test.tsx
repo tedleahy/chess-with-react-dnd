@@ -10,7 +10,7 @@ describe('Dialog component', () => {
         expect(screen.getByRole('dialog')).toBeVisible();
     });
 
-    test('Is not visible when the "open" prop is false', () => {
+    test('Is not rendered when the "open" prop is false', () => {
         render(<Dialog open={false} header={DIALOG_HEADER_TEXT} />);
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
