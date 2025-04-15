@@ -7,11 +7,11 @@ export function isValidMove(
     [currentX, currentY]: number[],
     [targetX, targetY]: number[],
     piecePositions: PiecePositions,
-) {
+): boolean {
     const validMoves = piecePositions[`${currentX},${currentY}`]?.validMoves;
     if (!validMoves) return false;
 
-    return validMoves[`${targetX},${targetY}`];
+    return !!validMoves[`${targetX},${targetY}`];
 }
 
 const rookDirections = [
