@@ -57,21 +57,20 @@ function withinBoardBounds(x: number, y: number) {
     return x >= 0 && x <= 7 && y >= 0 && y <= 7;
 }
 
-export function getValidMoves(
-    x: number,
-    y: number,
+function getValidMoves(
+    [startX, startY]: number[],
     pieceName: string,
     color: PieceColor,
     piecePositions: PiecePositions,
 ): ValidMoves {
-    if (pieceName === 'pawn') return getValidPawnMoves(x, y, color, piecePositions);
+    if (pieceName === 'pawn') return getValidPawnMoves(startX, startY, color, piecePositions);
 
     const directions = validDirectionsForPiece[`${pieceName}`];
     const validMoves: ValidMoves = {};
 
     for (const [dx, dy] of directions) {
-        let currentX = x + dx;
-        let currentY = y + dy;
+        let currentX = startX + dx;
+        let currentY = startY + dy;
 
         while (withinBoardBounds(currentX, currentY)) {
             if (squareContainsSameColorPiece(currentX, currentY, color, piecePositions)) {
@@ -147,7 +146,7 @@ function squareContainsSameColorPiece(
 export function setValidMovesInPiecePositions(piecePositions: PiecePositions) {
     for (const [position, piece] of Object.entries(piecePositions)) {
         const [x, y] = position.split(',').map(Number);
-        piece.validMoves = getValidMoves(x, y, piece.name, piece.color, piecePositions);
+        piece.validMoves = getValidMoves([x, y], piece.name, piece.color, piecePositions);
     }
 }
 
