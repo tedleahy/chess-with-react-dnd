@@ -2,11 +2,7 @@ import { PropsWithChildren } from 'react';
 import Square from './Square';
 import { DropTargetMonitor, useDrop } from 'react-dnd';
 import { ItemTypes, ChessPiece, PieceColor, PiecePositions } from '../utils/constants';
-import {
-    isValidMove,
-    moveWouldResultInCheck,
-    setValidMovesInPiecePositions,
-} from '../utils/moveValidations';
+import { isValidMove, moveWouldResultInCheck, withValidMoves } from '../utils/moveValidations';
 import Overlay from './Overlay';
 
 interface BoardSquareProps {
@@ -74,9 +70,7 @@ export default function BoardSquare({
                         color: item.color,
                     };
 
-                    setValidMovesInPiecePositions(newPiecePositions);
-
-                    return newPiecePositions;
+                    return withValidMoves(newPiecePositions);
                 });
 
                 setCurrentPlayer((prev) => (prev === 'white' ? 'black' : 'white'));

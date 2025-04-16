@@ -142,12 +142,17 @@ function squareContainsSameColorPiece(
     return pieceOnSquare && pieceOnSquare.color === color;
 }
 
-// For each piece, calculate all the valid moves it can make, and update its valid moves in piecePositions
-export function setValidMovesInPiecePositions(piecePositions: PiecePositions) {
-    for (const [position, piece] of Object.entries(piecePositions)) {
+// For each piece, calculate all the valid moves it can make and store that data with the piece
+// in piece positions
+export function withValidMoves(piecePositions: PiecePositions): PiecePositions {
+    const newPiecePositions = { ...piecePositions };
+
+    for (const [position, piece] of Object.entries(newPiecePositions)) {
         const [x, y] = position.split(',').map(Number);
         piece.validMoves = getValidMoves([x, y], piece.name, piece.color, piecePositions);
     }
+
+    return newPiecePositions;
 }
 
 // Check if a move would result in the player's king being in check
@@ -158,7 +163,7 @@ export function moveWouldResultInCheck(
     currentTurn: PieceColor,
 ): boolean {
     // Create a deep copy of the piece positions to simulate the move
-    const simulatedPositions: PiecePositions = JSON.parse(JSON.stringify(piecePositions));
+    let simulatedPositions: PiecePositions = JSON.parse(JSON.stringify(piecePositions));
 
     // Get the piece that would be moved
     const movingPiece = simulatedPositions[`${currentX},${currentY}`];
@@ -171,7 +176,7 @@ export function moveWouldResultInCheck(
     simulatedPositions[`${targetX},${targetY}`] = movingPiece;
 
     // Recalculate valid moves for all pieces in the simulated new positions
-    setValidMovesInPiecePositions(simulatedPositions);
+    simulatedPositions = withValidMoves(simulatedPositions);
 
     // Find the king of the current player
     let kingPosition = '';

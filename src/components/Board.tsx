@@ -6,7 +6,7 @@ import { BOARD_SIZE, PieceColor, PiecePositions, initialPiecePositions } from '.
 import Piece from './Piece';
 import Overlay from './Overlay';
 import PawnPromotionDialog from './PawnPromotionDialog';
-import { isCheckmate, setValidMovesInPiecePositions } from '../utils/moveValidations';
+import { isCheckmate, withValidMoves } from '../utils/moveValidations';
 import CheckmateDialog from './CheckmateDialog';
 
 type BoardProps = {
@@ -103,8 +103,7 @@ export default function Board({ currentPlayer, setCurrentPlayer }: BoardProps) {
                         setCheckmate(false);
                         setInCheck(null);
                         setCurrentPlayer('white');
-                        setValidMovesInPiecePositions(initialPiecePositions);
-                        setPiecePositions(initialPiecePositions);
+                        setPiecePositions(withValidMoves(initialPiecePositions));
                     }}
                 />
                 {squares}

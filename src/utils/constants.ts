@@ -1,4 +1,4 @@
-import { setValidMovesInPiecePositions, ValidMoves } from './moveValidations';
+import { ValidMoves, withValidMoves } from './moveValidations';
 
 export const ItemTypes = {
     PIECE: 'piece',
@@ -24,7 +24,7 @@ export type ChessPiece = {
 };
 export type PiecePositions = Record<string, ChessPiece>;
 
-export const initialPiecePositions: PiecePositions = {
+export let initialPiecePositions: PiecePositions = {
     '0,0': { name: 'rook', color: 'black' },
     '1,0': { name: 'knight', color: 'black' },
     '2,0': { name: 'bishop', color: 'black' },
@@ -49,4 +49,4 @@ for (let i = 0; i < 8; i++) {
     initialPiecePositions[`${i},6`] = { name: 'pawn', color: 'white' };
 }
 
-setValidMovesInPiecePositions(initialPiecePositions);
+initialPiecePositions = withValidMoves(initialPiecePositions);
