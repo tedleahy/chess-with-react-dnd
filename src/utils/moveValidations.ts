@@ -115,8 +115,8 @@ function getValidPawnMoves(
 
         // Prevent moving off the board
         if (!withinBoardBounds(currentX, currentY)) continue;
-        // Prevent moving onto a square that contains a piece of the same colour
-        if (squareContainsSameColorPiece(currentX, currentY, color, piecePositions)) continue;
+        // Prevent moving onto a square that contains a piece of the same colour, and don't allow moving beyond that piece
+        if (squareContainsSameColorPiece(currentX, currentY, color, piecePositions)) break;
         // Prevent moving 2 squares forward unless it's this pawn's first move
         if (dy === 2 && !isFirstMove) continue;
 
@@ -124,7 +124,7 @@ function getValidPawnMoves(
         // Prevent diagonal moves unless there's another piece in that square (i.e. it's capturing)
         if (dx !== 0 && !pieceOnSquare) continue;
         // Prevent moving forward if there's an opponent's piece in that square - pawns can only capture diagonally
-        if (dx === 0 && pieceOnSquare) continue;
+        if (dx === 0 && pieceOnSquare) break;
 
         validMoves[`${currentX},${currentY}`] = true;
     }
@@ -137,7 +137,7 @@ function squareContainsSameColorPiece(
     y: number,
     color: PieceColor,
     piecePositions: PiecePositions,
-) {
+): boolean {
     const pieceOnSquare = piecePositions[`${x},${y}`];
     return pieceOnSquare && pieceOnSquare.color === color;
 }
