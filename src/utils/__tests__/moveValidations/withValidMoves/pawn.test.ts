@@ -4,10 +4,11 @@ import { withValidMoves } from '../../../moveValidations';
 describe('withValidMoves - pawns', () => {
     test('a pawn with two clear spaces in front of it on its first move', () => {
         /*
-            |   | <- position 0,0
-            | ♟ | <- position 0,1 (black)
-            |   | <- position 0,2
-            |   | <- position 0,3
+              0
+          0 |   |
+          1 | ♟ |
+          2 |   |
+          3 |   |
         */
         const piecePositions: PiecePositions = {
             '0,1': { name: 'pawn', color: 'black' },
@@ -24,11 +25,12 @@ describe('withValidMoves - pawns', () => {
 
     test('a pawn with two clear spaces in front of it on its second move', () => {
         /*
-            |   | <- position 0,0
-            |   | <- position 0,1
-            | ♟ | <- position 0,2 (black)
-            |   | <- position 0,3
-            |   | <- position 0,4
+              0
+          0 |   |
+          1 |   |
+          2 | ♟ |
+          3 |   |
+          4 |   |
         */
         const piecePositions: PiecePositions = {
             '0,2': { name: 'pawn', color: 'black' },
@@ -43,12 +45,13 @@ describe('withValidMoves - pawns', () => {
         });
     });
 
-    test('a pawn with a piece of the same color in front of it', () => {
+    test('a pawn with a friendly piece in front of it', () => {
         /*
-            |   | <- position 0,0
-            | ♟ | <- position 0,1 (black)
-            | ♟ | <- position 0,2 (black)
-            |   | <- position 0,3
+              0
+          0 |   |
+          1 | ♟ |
+          2 | ♟ |
+          3 |   |
         */
         const piecePositions: PiecePositions = {
             '0,1': { name: 'pawn', color: 'black' },
@@ -69,12 +72,13 @@ describe('withValidMoves - pawns', () => {
         });
     });
 
-    test('a pawn with a piece of a different color in front of it', () => {
+    test('a pawn with an enemy piece in front of it', () => {
         /*
-            |   | <- position 0,0
-            | ♟ | <- position 0,1 (black)
-            | ♟ | <- position 0,2 (white)
-            |   | <- position 0,3
+              0
+          0 |   |
+          1 | ♟ |
+          2 | ♟ |
+          3 |   |
         */
         const piecePositions: PiecePositions = {
             '0,1': { name: 'pawn', color: 'black' },
@@ -97,10 +101,11 @@ describe('withValidMoves - pawns', () => {
 
     test('two different-colored pawns with only one clear space between them', () => {
         /*
-            |   | <- position 0,0
-            | ♟ | <- position 0,1 (black)
-            |   | <- position 0,2
-            | ♟ | <- position 0,3 (white)
+              0
+          0 |   |
+          1 | ♟ |
+          2 |   |
+          3 | ♙ |
         */
         const piecePositions: PiecePositions = {
             '0,1': { name: 'pawn', color: 'black' },
@@ -123,9 +128,10 @@ describe('withValidMoves - pawns', () => {
 
     test('two different-colored pawns, diagonal from each other', () => {
         /*
-            |   |   | <- position 0,0
-            | ♟ |   | <- position 0,1 (black)
-            |   | ♟ | <- position 1,2 (white)
+              0   1
+          0 |   |   |
+          1 | ♟ |   |
+          2 |   | ♙ |
         */
         const piecePositions: PiecePositions = {
             '0,1': { name: 'pawn', color: 'black' },
@@ -153,11 +159,13 @@ describe('withValidMoves - pawns', () => {
         });
     });
 
-    test('two pawns of the same color, diagonal from each other', () => {
+    test('two friendly pawns, diagonal from each other', () => {
         /*
-            |   |   | <- position 0,0
-            | ♟ |   | <- position 0,1 (black)
-            |   | ♟ | <- position 1,2 (black)
+              0   1
+          0 |   |   |
+          1 | ♟ |   |
+          2 |   | ♟ |
+          3 |   |   |
         */
         const piecePositions: PiecePositions = {
             '0,1': { name: 'pawn', color: 'black' },
