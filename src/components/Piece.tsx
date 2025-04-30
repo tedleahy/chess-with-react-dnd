@@ -1,13 +1,8 @@
 import { useDrag, DragSourceMonitor, DragPreviewImage } from 'react-dnd';
-import {
-    DRAG_PREVIEW_IMAGES,
-    ItemTypes,
-    PIECE_CHARS,
-    PIECE_SIZE,
-    PieceColor,
-} from '../utils/constants';
+import { ItemTypes, PIECE_CHARS, PIECE_SIZE, PieceColor } from '../utils/constants';
+import { DRAG_PREVIEW_IMAGES } from '../utils/dragPreviewImages';
 
-interface PieceProps {
+export interface PieceProps {
     x: number;
     y: number;
     name: string;

@@ -7,11 +7,11 @@ export function isValidMove(
     [currentX, currentY]: number[],
     [targetX, targetY]: number[],
     piecePositions: PiecePositions,
-) {
+): boolean {
     const validMoves = piecePositions[`${currentX},${currentY}`]?.validMoves;
     if (!validMoves) return false;
 
-    return validMoves[`${targetX},${targetY}`];
+    return !!validMoves[`${targetX},${targetY}`];
 }
 
 const rookDirections = [
@@ -57,21 +57,20 @@ function withinBoardBounds(x: number, y: number) {
     return x >= 0 && x <= 7 && y >= 0 && y <= 7;
 }
 
-export function getValidMoves(
-    x: number,
-    y: number,
+function getValidMoves(
+    [startX, startY]: number[],
     pieceName: string,
     color: PieceColor,
     piecePositions: PiecePositions,
 ): ValidMoves {
-    if (pieceName === 'pawn') return getValidPawnMoves(x, y, color, piecePositions);
+    if (pieceName === 'pawn') return getValidPawnMoves(startX, startY, color, piecePositions);
 
     const directions = validDirectionsForPiece[`${pieceName}`];
     const validMoves: ValidMoves = {};
 
     for (const [dx, dy] of directions) {
-        let currentX = x + dx;
-        let currentY = y + dy;
+        let currentX = startX + dx;
+        let currentY = startY + dy;
 
         while (withinBoardBounds(currentX, currentY)) {
             if (squareContainsSameColorPiece(currentX, currentY, color, piecePositions)) {
@@ -116,8 +115,8 @@ function getValidPawnMoves(
 
         // Prevent moving off the board
         if (!withinBoardBounds(currentX, currentY)) continue;
-        // Prevent moving onto a square that contains a piece of the same colour
-        if (squareContainsSameColorPiece(currentX, currentY, color, piecePositions)) continue;
+        // Prevent moving onto a square that contains a piece of the same colour, and don't allow moving beyond that piece
+        if (squareContainsSameColorPiece(currentX, currentY, color, piecePositions)) break;
         // Prevent moving 2 squares forward unless it's this pawn's first move
         if (dy === 2 && !isFirstMove) continue;
 
@@ -125,7 +124,7 @@ function getValidPawnMoves(
         // Prevent diagonal moves unless there's another piece in that square (i.e. it's capturing)
         if (dx !== 0 && !pieceOnSquare) continue;
         // Prevent moving forward if there's an opponent's piece in that square - pawns can only capture diagonally
-        if (dx === 0 && pieceOnSquare) continue;
+        if (dx === 0 && pieceOnSquare) break;
 
         validMoves[`${currentX},${currentY}`] = true;
     }
@@ -138,17 +137,22 @@ function squareContainsSameColorPiece(
     y: number,
     color: PieceColor,
     piecePositions: PiecePositions,
-) {
+): boolean {
     const pieceOnSquare = piecePositions[`${x},${y}`];
     return pieceOnSquare && pieceOnSquare.color === color;
 }
 
-// For each piece, calculate all the valid moves it can make, and update its valid moves in piecePositions
-export function setValidMovesInPiecePositions(piecePositions: PiecePositions) {
-    for (const [position, piece] of Object.entries(piecePositions)) {
+// For each piece, calculate all the valid moves it can make and store that data with the piece
+// in piece positions
+export function withValidMoves(piecePositions: PiecePositions): PiecePositions {
+    const newPiecePositions = { ...piecePositions };
+
+    for (const [position, piece] of Object.entries(newPiecePositions)) {
         const [x, y] = position.split(',').map(Number);
-        piece.validMoves = getValidMoves(x, y, piece.name, piece.color, piecePositions);
+        piece.validMoves = getValidMoves([x, y], piece.name, piece.color, piecePositions);
     }
+
+    return newPiecePositions;
 }
 
 // Check if a move would result in the player's king being in check
@@ -159,7 +163,7 @@ export function moveWouldResultInCheck(
     currentTurn: PieceColor,
 ): boolean {
     // Create a deep copy of the piece positions to simulate the move
-    const simulatedPositions: PiecePositions = JSON.parse(JSON.stringify(piecePositions));
+    let simulatedPositions: PiecePositions = JSON.parse(JSON.stringify(piecePositions));
 
     // Get the piece that would be moved
     const movingPiece = simulatedPositions[`${currentX},${currentY}`];
@@ -172,7 +176,7 @@ export function moveWouldResultInCheck(
     simulatedPositions[`${targetX},${targetY}`] = movingPiece;
 
     // Recalculate valid moves for all pieces in the simulated new positions
-    setValidMovesInPiecePositions(simulatedPositions);
+    simulatedPositions = withValidMoves(simulatedPositions);
 
     // Find the king of the current player
     let kingPosition = '';
